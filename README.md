@@ -27,7 +27,7 @@ https://github.com/FleischmanJ88/03-RNG-Machine
 
 ### <strong>Screenshot</strong>
 
-![](Assets/PasswordGeneratorSS.png)
+![](Develop/Assets/Images/PasswordGenerator.png)
 
 ### <strong>Contact Information</strong>
 
