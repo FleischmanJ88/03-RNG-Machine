@@ -1,121 +1,82 @@
-// Assignment code here
-window.alert("Enter parameters to define the passwords complexity, click on the button |Generate Password| when when ready")
+//Assignement Code
+var generateBtn = document.querySelector("#generate");
+
+function randomInt(min, max) {
+  if (!max) {
+    max = min
+    min = 0
+  }
+  var rand = Math.random()
+  return Math.floor(min * (1 - rand) + rand * max)
+}
+
+function getRandom(list) {
+  return list[randomInt(list.length)]
+}
 
 function generatePassword() {
 
-  var makePassword = []
+  var userInput = window.prompt("What is your preferred password length?")
 
-  function getI(anything) {
-    return Math.floor(Math.random() * anything)
-  };
+  var passwordLength = parseInt(userInput)
 
-  var passText = {
-    passwordLength: passLength(),
-    lower: passLower(),
-    upper: passUpper(),
-    number: passNumber(),
-    special: passSpec(),
-  };
-
-  console.log(passText)
-
-  if (passText.lower) {
-    makePassword.push(randomLower());
+  if (isNaN(passwordLength)) {
+    window.alert("That is not a number")
+    return
   }
 
-  if (passText.upper) {
-    makePassword.push(randomUpper());
+  if (passwordLength < 8 || passwordLength > 128) {
+    window.alert("Your password length must be between 8 and 128 characters")
+    return
+  }
+  var userWantsNumbers = window.confirm("Do you want numbers in the password?")
+  var userWantsSymbols = window.confirm("Do you want symbols in the password?")
+  var userWantsLower = window.confirm("Do you want lower case in the password?")
+  var userWantsUpper = window.confirm("Do you want upper case in the password?")
+
+  var numberList = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+  var symbolList = ['!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', ']', '^', '_', '`', '{', '|', '}', '~']
+  var lowerLettersList = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+  var upperLettersList = []
+
+
+  var optionalList = []
+
+  for (var i = 0; i < lowerLettersList.length; i++) {
+    upperLettersList[i] = lowerLettersList[i].toUpperCase()
   }
 
-  if (passText.number) {
-    makePassword.push(randomNumber());
+  if (userWantsNumbers === true) {
+    optionalList.push(numberList)
   }
 
-  if (passText.special) {
-    makePassword.push(randomSymbol());
+  if (userWantsSymbols === true) {
+    optionalList.push(symbolList)
   }
 
-  if (passText.lower === false && passText.upper === false && passText.number === false && passText.special === false) {
-    window.alert("You must enter at least 1 parameter. Please try again.");
-    return ("Please try again");
+  if (userWantsLower === true) {
+    optionalList.push(lowerLettersList)
   }
 
-  console.log(makePassword);
-  console.log(passText.passwordLength, makePassword.length);
-
-  for (let I = makePassword.length; I < passText.passwordLength; I++) {
-    makePassword[I] = makePassword[getI(makePassword.length)];
+  if (userWantsUpper === true) {
+    optionalList.push(upperLettersList)
   }
 
-  var passwordString = makePassword.join("");
-
-  makePassword = [];
-  return passwordString;
-}
-
-
-var passLength = function () {
-  var promptLength = window.prompt("How many characters do you want your password to be, pick a length between 8 and 128.");
-
-  if (promptLength === "" || promptLength === null) {
-    window.alert("Please pick a number between 8 and 128.");
-    return passLength();
+  if (optionalList.length === 0) {
+    optionalList.push(lowerLettersList)
   }
 
-  if (promptLength < 8 || promptLength > 128) {
-    window.alert("You have chosen an invalid password length. Please pick between 8 and 128.");
-    return promptLength();
+  var generatedPassword = ""
+
+  for (var i = 0; i < passwordLength; i++) {
+    var randomChoice = getRandom(optionalList)
+    var randomChar = getRandom(randomChoice)
+    generatedPassword += randomChar
   }
 
-  console.log("You have chosen " + promptLength + " characters.");
-
-  var passwordLength = promptLength;
-
-  return passwordLength;
+  return generatedPassword
 }
-
-var passLower = function () {
-  var promptLower = window.confirm("Do you want to use lower case letters?");
-
-  return promptLower;
-}
-var passUpper = function () {
-  var promptUpper = window.confirm("Do you want to use upper case letters?");
-
-  return promptUpper;
-}
-
-var passNumber = function () {
-  var promptNumber = window.confirm("Do you want to use include numbers?");
-
-  return promptNumber;
-}
-
-var passSpec = function () {
-  var promptSpecial = confirm("Do you want to use special characters?");
-
-  return promptSpecial;
-}
-
-function randomLower() {
-  return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
-}
-
-function randomUpper() {
-  return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
-}
-
-function randomNumber() {
-  return String.fromCharCode(Math.floor(Math.random() * 10) + 48);
-}
-
-function randomSymbol() {
-  const symbols = "~!@#$%^&*()-=_+[]{}\|;':,.<>/?";
-  return symbols[Math.floor(Math.random() * symbols.length)];
-}
-{
-  var generateBtn = document.querySelector("#generate");
-}
+//Write password to the #password input
 function writePassword() {
   var password = generatePassword();
   var passwordText = document.querySelector("#password");
@@ -124,6 +85,5 @@ function writePassword() {
 
 }
 
-{
-  generateBtn.addEventListener("click", writePassword);
-}
+//Add event listener to generate button
+generateBtn.addEventListener("click", writePassword)
